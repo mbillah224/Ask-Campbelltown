@@ -4,31 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Ask Campbelltown Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <style>
-:root{--green:#009464;--blue:#009dda;--yellow:#fdb813;--ink:#17313f;--muted:#667085;--line:#e4e7ec}
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;color:var(--ink);background:#fff}
+:root{--green:#009464;--blue:#009dda;--yellow:#fdb813;--ink:#17313f;--muted:#667085;--line:#e4e7ec;--soft:#f6fafb}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Poppins',sans-serif;color:var(--ink);background:#fff}button,input{font-family:'Poppins',sans-serif}
 .topbar{height:8px;display:grid;grid-template-columns:1fr 1fr 1fr}.topbar span:nth-child(1){background:var(--green)}.topbar span:nth-child(2){background:var(--blue)}.topbar span:nth-child(3){background:var(--yellow)}
 header{border-bottom:1px solid var(--line)}.head{max-width:1180px;margin:auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}.logo{width:220px}nav{display:flex;gap:24px;font-size:14px;font-weight:600;color:#475467}
-.hero{background:linear-gradient(135deg,#f7fbfa,#f7fbfd);border-bottom:1px solid var(--line)}.hero-in{max-width:1180px;margin:auto;padding:64px 24px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}h1{font-size:52px;line-height:1.05;margin:8px 0 16px}.eyebrow{color:var(--green);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:1px}.hero p{color:var(--muted);font-size:18px;line-height:1.6}
-.hero-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 14px 40px rgba(17,43,57,.08)}.hero-card button{border:0;background:var(--green);color:#fff;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer}
+.hero{background:linear-gradient(135deg,#f7fbfa,#f7fbfd);border-bottom:1px solid var(--line)}.hero-in{max-width:1180px;margin:auto;padding:64px 24px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}h1{font-size:52px;line-height:1.05;margin:8px 0 16px;letter-spacing:-1.2px}.eyebrow{color:var(--green);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:1px}.hero p{color:var(--muted);font-size:18px;line-height:1.6}
+.hero-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 14px 40px rgba(17,43,57,.08)}.hero-card h2{margin-top:0}.hero-card button{border:0;background:var(--green);color:#fff;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 7px 18px rgba(0,148,100,.18)}
 .services{max-width:1180px;margin:auto;padding:42px 24px 90px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{border:1px solid var(--line);border-radius:14px;padding:20px;min-height:110px}.card strong{display:block;margin-bottom:8px}.card span{color:var(--muted);font-size:13px}
 #launcher{position:fixed;right:24px;bottom:24px;z-index:1000;border:0;background:var(--green);color:#fff;border-radius:999px;padding:12px 17px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px rgba(0,148,100,.3)}
 #widget{position:fixed;right:24px;bottom:84px;z-index:1001;width:min(420px,calc(100vw - 32px));height:min(650px,calc(100vh - 110px));background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(17,43,57,.2);display:none;flex-direction:column;overflow:hidden}
-#widget.open{display:flex}.chat-head{padding:15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,var(--green),var(--blue));color:#fff;font-weight:900;font-size:12px}.title{flex:1}.title strong{display:block}.title span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.icon{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer;font-size:17px}
-.chat-body{position:relative;flex:1;min-height:0}#webchat{position:absolute;inset:0}#state{position:absolute;inset:0;display:grid;place-items:center;background:#fff;z-index:20;text-align:center;padding:24px}#state.hidden{display:none}.spinner{width:36px;height:36px;border:4px solid #edf1f4;border-top-color:var(--blue);border-right-color:var(--green);border-radius:50%;margin:auto auto 14px;animation:spin .8s linear infinite}
-#thinking{position:absolute;left:16px;bottom:70px;z-index:15;display:none;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:9px 12px;box-shadow:0 6px 18px rgba(17,43,57,.12);font-size:12px;color:#586b77}#thinking.show{display:flex}.dots{display:flex;gap:4px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:bounce 1s infinite}.dots i:nth-child(2){background:var(--green);animation-delay:.13s}.dots i:nth-child(3){background:var(--yellow);animation-delay:.26s}
-.suggestions{padding:9px 12px;border-top:1px solid var(--line);display:flex;gap:7px;overflow:auto}.suggestions.hidden{display:none}.suggestions button{flex:0 0 auto;border:1px solid #c8e1ea;background:#f7fcfe;color:#076c92;border-radius:999px;padding:7px 10px;font-size:10.5px;font-weight:700;cursor:pointer}
-.disclaimer{padding:7px 10px;border-top:1px solid var(--line);background:#fafafa;text-align:center;font-size:9.5px;color:#74838d}
+#widget.open{display:flex}.chat-head{padding:15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid #dfe8e5;overflow:hidden;flex:0 0 auto}.avatar img{width:100%;height:100%;object-fit:contain;padding:5px}.title{flex:1}.title strong{display:block}.title span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.icon{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer;font-size:17px;color:#475467}
+.chat-body{position:relative;flex:1;min-height:0}.webchat{position:absolute;inset:0}.state{position:absolute;inset:0;display:grid;place-items:center;background:#fff;z-index:20;text-align:center;padding:24px}.state.hidden{display:none}.spinner{width:36px;height:36px;border:4px solid #edf1f4;border-top-color:var(--blue);border-right-color:var(--green);border-radius:50%;margin:auto auto 14px;animation:spin .8s linear infinite}
+.thinking{position:absolute;left:16px;bottom:70px;z-index:15;display:none;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:9px 12px;box-shadow:0 6px 18px rgba(17,43,57,.12);font-size:12px;color:#586b77}.thinking.show{display:flex}.dots{display:flex;gap:4px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:bounce 1s infinite}.dots i:nth-child(2){background:var(--green);animation-delay:.13s}.dots i:nth-child(3){background:var(--yellow);animation-delay:.26s}
+.suggestions{padding:9px 12px;border-top:1px solid var(--line);display:flex;gap:7px;overflow:auto}.suggestions.hidden{display:none}.suggestions button{flex:0 0 auto;border:1px solid #c8e1ea;background:#f7fcfe;color:#076c92;border-radius:999px;padding:7px 10px;font-size:10.5px;font-weight:700;cursor:pointer}.disclaimer{padding:7px 10px;border-top:1px solid var(--line);background:#fafafa;text-align:center;font-size:9.5px;color:#74838d}
+
+/* Full-page resident experience */
+#fullPage{position:fixed;inset:0;z-index:2000;background:linear-gradient(135deg,#f2f8fa,#edf6f4);display:none;overflow:auto;padding:28px}#fullPage.open{display:block}.full-shell{width:min(1420px,100%);height:min(880px,calc(100vh - 56px));min-height:650px;margin:0 auto;background:#fff;border:1px solid #dfe7ea;border-radius:24px;box-shadow:0 24px 70px rgba(17,43,57,.18);overflow:hidden;display:grid;grid-template-columns:minmax(360px,35%) 1fr;position:relative}.full-info{position:relative;padding:42px 42px 54px;background:radial-gradient(circle at 95% 0%,rgba(253,184,19,.18),transparent 25%),radial-gradient(circle at 20% 100%,rgba(0,157,218,.12),transparent 34%),#fff;border-right:1px solid var(--line);overflow:hidden}.full-info:after{content:'';position:absolute;width:420px;height:420px;border:70px solid rgba(0,148,100,.055);border-radius:50%;left:-220px;bottom:-240px}.full-logo{width:260px;max-width:80%;margin-bottom:34px}.full-kicker{color:var(--green);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px}.full-info h2{font-size:38px;line-height:1.08;margin:9px 0 14px;letter-spacing:-.8px}.full-intro{font-size:15px;line-height:1.65;color:var(--muted);margin:0 0 26px}.benefits{display:grid;gap:14px;position:relative;z-index:2}.benefit{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.45}.benefit-dot{width:25px;height:25px;border-radius:50%;background:#e9f7f2;color:var(--green);display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 auto}.brand-strip{position:absolute;left:0;right:0;bottom:0;height:8px;display:grid;grid-template-columns:1fr 1fr 1fr}.brand-strip span:nth-child(1){background:var(--green)}.brand-strip span:nth-child(2){background:var(--blue)}.brand-strip span:nth-child(3){background:var(--yellow)}
+.full-chat{display:flex;flex-direction:column;min-width:0}.full-chat .chat-head{padding:18px 20px}.full-chat .avatar{width:46px;height:46px}.full-chat .title strong{font-size:16px}.full-chat .title span{font-size:11.5px}.live{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);margin-right:4px}.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(0,148,100,.1)}.full-chat-body{position:relative;flex:1;min-height:0}.full-chat .thinking{left:20px;bottom:78px;font-size:12.5px}.full-chat .suggestions{padding:10px 15px}.full-chat .suggestions button{font-size:11px;padding:8px 11px}.full-chat .disclaimer{font-size:10px;padding:8px 14px}.back-btn{position:absolute;top:14px;right:14px;z-index:5;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;color:#475467;cursor:pointer;box-shadow:0 4px 12px rgba(17,43,57,.07)}
+
 @keyframes spin{to{transform:rotate(360deg)}}@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
-@media(max-width:850px){nav{display:none}.hero-in{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}h1{font-size:42px}}
-@media(max-width:560px){#widget{right:0;bottom:0;width:100vw;height:100dvh;border-radius:0;border:0}#launcher{right:16px;bottom:16px}.cards{grid-template-columns:1fr}h1{font-size:36px}}
+@media(max-width:900px){nav{display:none}.hero-in{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}h1{font-size:42px}.full-shell{grid-template-columns:1fr;height:calc(100vh - 32px);min-height:0}.full-info{display:none}#fullPage{padding:16px}.full-shell{border-radius:18px}}
+@media(max-width:560px){#widget{right:0;bottom:0;width:100vw;height:100dvh;border-radius:0;border:0}#launcher{right:16px;bottom:16px}.cards{grid-template-columns:1fr}h1{font-size:36px}#fullPage{padding:0}.full-shell{height:100dvh;border-radius:0;border:0}.back-btn{top:9px;right:9px}}
 </style>
 </head>
 <body>
+<div id="siteView">
 <div class="topbar"><span></span><span></span><span></span></div>
 <header><div class="head"><img class="logo" src="campbelltown-logo.png" alt="Campbelltown City Council"><nav><span>Residents</span><span>Services</span><span>Community</span><span>Council</span></nav></div></header>
-<section class="hero"><div class="hero-in"><div><div class="eyebrow">Campbelltown City Council</div><h1>A safe, sustainable, vibrant Community.</h1><p>This demonstration shows how Ask Campbelltown could sit naturally on the Council website as an always-available AI assistant.</p></div><div class="hero-card"><h2>Need help finding something?</h2><p>Ask about Council services, facilities, waste, payments and more.</p><button onclick="openChat()">Ask Campbelltown</button></div></div></section>
+<section class="hero"><div class="hero-in"><div><div class="eyebrow">Campbelltown City Council</div><h1>A safe, sustainable, vibrant Community.</h1><p>This demonstration shows how Ask Campbelltown could sit naturally on the Council website as an always-available AI assistant.</p></div><div class="hero-card"><h2>Need help finding something?</h2><p>Ask about Council services, facilities, waste, payments and more.</p><button onclick="openFullPage()">Ask Campbelltown</button></div></div></section>
 <section class="services"><h2>Popular services</h2><div class="cards">
 <div class="card"><strong>Bin Collection</strong><span>Check your collection day and waste services.</span></div>
 <div class="card"><strong>Hard Waste</strong><span>Find hard waste collection information.</span></div>
@@ -39,29 +47,89 @@ header{border-bottom:1px solid var(--line)}.head{max-width:1180px;margin:auto;pa
 <div class="card"><strong>Hire a Facility</strong><span>Find halls, rooms and facilities for hire.</span></div>
 <div class="card"><strong>The ARC Campbelltown</strong><span>Find recreation, aquatic and fitness information.</span></div>
 </div></section>
+</div>
 
+<!-- Floating resident experience -->
 <button id="launcher" onclick="openChat()">Ask Campbelltown</button>
-
 <aside id="widget">
-<div class="chat-head"><div class="avatar">AI</div><div class="title"><strong>Ask Campbelltown</strong><span>Campbelltown City Council AI Assistant</span></div><button class="icon" id="restart">↻</button><button class="icon" onclick="closeChat()">×</button></div>
-<div class="chat-body"><div id="webchat"></div><div id="state"><div><div class="spinner"></div><strong id="stateTitle">Connecting…</strong><div id="stateText" style="font-size:12px;color:#667085;margin-top:6px">Starting a secure conversation with Ask Campbelltown.</div></div></div><div id="thinking"><div class="dots"><i></i><i></i><i></i></div><span>Assistant is thinking…</span></div></div>
-<div id="suggestions" class="suggestions"><button>When is my bin collected?</button><button>How do I book hard waste?</button><button>How can I report an issue?</button></div>
+<div class="chat-head"><div class="avatar"><img src="campbelltown-logo.png" alt=""></div><div class="title"><strong>Ask Campbelltown</strong><span>Campbelltown City Council AI Assistant</span></div><button class="icon" id="widgetRestart" title="Start a new conversation">↻</button><button class="icon" onclick="closeChat()" title="Close">×</button></div>
+<div class="chat-body"><div id="widgetWebchat" class="webchat"></div><div id="widgetState" class="state"><div><div class="spinner"></div><strong id="widgetStateTitle">Connecting…</strong><div id="widgetStateText" style="font-size:12px;color:#667085;margin-top:6px">Starting a secure conversation with Ask Campbelltown.</div></div></div><div id="widgetThinking" class="thinking"><div class="dots"><i></i><i></i><i></i></div><span>Ask Campbelltown is searching the website...</span></div></div>
+<div id="widgetSuggestions" class="suggestions"><button>When is my bin collected?</button><button>How do I book hard waste?</button><button>How can I report an issue?</button></div>
 <div class="disclaimer">AI-generated information may contain errors. Verify important information on the Council website.</div>
 </aside>
 
+<!-- Full-page resident experience -->
+<section id="fullPage" aria-label="Ask Campbelltown full-page assistant">
+<div class="full-shell">
+<button class="back-btn" onclick="closeFullPage()">← Back to Council page</button>
+<div class="full-info">
+<img class="full-logo" src="campbelltown-logo.png" alt="Campbelltown City Council">
+<div class="full-kicker">Your Council, here to help</div>
+<h2>Ask Campbelltown!</h2>
+<p class="full-intro">Get quick answers to your questions, access Council services and find the information you need. All in one place!</p>
+<div class="benefits">
+<div class="benefit"><span class="benefit-dot">1</span><span>Tailored to Campbelltown information and services.</span></div>
+<div class="benefit"><span class="benefit-dot">2</span><span>Clear, helpful answers.</span></div>
+<div class="benefit"><span class="benefit-dot">3</span><span>Your data is safe and secured.</span></div>
+</div>
+<div class="brand-strip"><span></span><span></span><span></span></div>
+</div>
+<div class="full-chat">
+<div class="chat-head"><div class="avatar"><img src="campbelltown-logo.png" alt=""></div><div class="title"><strong>Ask Campbelltown</strong><span>Campbelltown City Council website assistant</span></div><div class="live"><span class="live-dot"></span>Live</div><button class="icon" id="fullRestart" title="Start a new conversation">↻</button></div>
+<div class="full-chat-body"><div id="fullWebchat" class="webchat"></div><div id="fullState" class="state"><div><div class="spinner"></div><strong id="fullStateTitle">Connecting…</strong><div id="fullStateText" style="font-size:12px;color:#667085;margin-top:6px">Starting a secure conversation with Ask Campbelltown.</div></div></div><div id="fullThinking" class="thinking"><div class="dots"><i></i><i></i><i></i></div><span>Ask Campbelltown is searching the website...</span></div></div>
+<div id="fullSuggestions" class="suggestions"><button>When is my bin collected?</button><button>How do I book hard waste?</button><button>How can I report an issue?</button></div>
+<div class="disclaimer">AI-generated information may contain errors. Verify important information on the Council website.</div>
+</div>
+</div>
+</section>
+
 <script>
 const TOKEN_ENDPOINT="https://ask-campbelltown-token.mbillah-f7c.workers.dev/token";
-const widget=document.getElementById("widget"),launcher=document.getElementById("launcher"),state=document.getElementById("state"),stateTitle=document.getElementById("stateTitle"),stateText=document.getElementById("stateText"),thinking=document.getElementById("thinking"),suggestions=document.getElementById("suggestions");
-let directLine=null,store=null,connected=false,timer=null;
-const styleOptions={accent:"#009dda",botAvatarBackgroundColor:"#009464",botAvatarInitials:"AI",userAvatarBackgroundColor:"#009dda",userAvatarInitials:"You",avatarSize:32,bubbleBackground:"#f4f6f8",bubbleTextColor:"#17212b",bubbleBorderColor:"#e1e6e9",bubbleBorderRadius:13,bubbleBorderWidth:1,bubbleFromUserBackground:"#eaf8fd",bubbleFromUserTextColor:"#12384a",bubbleFromUserBorderColor:"#b8dce8",bubbleFromUserBorderRadius:13,bubbleFromUserBorderWidth:1,bubbleMaxWidth:310,sendBoxBackground:"#fff",sendBoxBorderTop:"solid 1px #e4e8ec",sendBoxTextColor:"#17212b",sendBoxPlaceholderColor:"#768691",sendBoxButtonColor:"#009dda",hideUploadButton:true};
-function openChat(){widget.classList.add("open");launcher.style.display="none";if(!connected)connectChat()}
-function closeChat(){widget.classList.remove("open");launcher.style.display="block"}
-function showThinking(){clearTimeout(timer);thinking.classList.add("show");timer=setTimeout(()=>thinking.classList.remove("show"),90000)}
-function hideThinking(){clearTimeout(timer);thinking.classList.remove("show")}
-function makeStore(){return WebChat.createStore({},({dispatch})=>next=>action=>{if(action.type==="DIRECT_LINE/CONNECT_FULFILLED")dispatch({type:"DIRECT_LINE/POST_ACTIVITY",meta:{method:"keyboard"},payload:{activity:{type:"event",name:"startConversation",channelData:{postBack:true}}}});if(action.type==="WEB_CHAT/SEND_MESSAGE"||action.type==="WEB_CHAT/SEND_POST_BACK"){suggestions.classList.add("hidden");showThinking()}if(action.type==="DIRECT_LINE/INCOMING_ACTIVITY"&&action.payload?.activity?.from?.role==="bot"&&action.payload.activity.type==="message")hideThinking();return next(action)})}
-async function connectChat(){state.classList.remove("hidden");stateTitle.textContent="Connecting…";stateText.textContent="Starting a secure conversation with Ask Campbelltown.";try{const r=await fetch(TOKEN_ENDPOINT,{cache:"no-store"});const d=await r.json();if(!r.ok||!d.token)throw new Error(d.error||"Token service failed.");directLine=WebChat.createDirectLine({token:d.token});store=makeStore();const wc=document.getElementById("webchat");wc.innerHTML="";WebChat.renderWebChat({directLine,store,styleOptions,locale:"en-AU"},wc);state.classList.add("hidden");connected=true}catch(e){stateTitle.textContent="Couldn't connect";stateText.textContent=e.message}}
-document.getElementById("restart").onclick=async()=>{hideThinking();suggestions.classList.remove("hidden");connected=false;try{directLine?.end?.()}catch(e){}await connectChat()};
-document.querySelectorAll("#suggestions button").forEach(b=>b.onclick=()=>store&&store.dispatch({type:"WEB_CHAT/SEND_MESSAGE",payload:{text:b.textContent.trim()}}));
+const styleOptions={accent:"#009dda",primaryFont:"'Poppins', sans-serif",botAvatarImage:"campbelltown-logo.png",userAvatarBackgroundColor:"#009dda",userAvatarInitials:"You",avatarSize:32,bubbleBackground:"#f4f6f8",bubbleTextColor:"#17212b",bubbleBorderColor:"#e1e6e9",bubbleBorderRadius:13,bubbleBorderWidth:1,bubbleFromUserBackground:"#eaf8fd",bubbleFromUserTextColor:"#12384a",bubbleFromUserBorderColor:"#b8dce8",bubbleFromUserBorderRadius:13,bubbleFromUserBorderWidth:1,bubbleMaxWidth:420,sendBoxBackground:"#fff",sendBoxBorderTop:"solid 1px #e4e8ec",sendBoxTextColor:"#17212b",sendBoxPlaceholderColor:"#768691",sendBoxButtonColor:"#009dda",hideUploadButton:true};
+
+function createExperience(prefix){
+  const webchat=document.getElementById(prefix+'Webchat');
+  const state=document.getElementById(prefix+'State');
+  const stateTitle=document.getElementById(prefix+'StateTitle');
+  const stateText=document.getElementById(prefix+'StateText');
+  const thinking=document.getElementById(prefix+'Thinking');
+  const suggestions=document.getElementById(prefix+'Suggestions');
+  let directLine=null,store=null,connected=false,timer=null;
+
+  function showThinking(){clearTimeout(timer);thinking.classList.add('show');timer=setTimeout(()=>thinking.classList.remove('show'),90000)}
+  function hideThinking(){clearTimeout(timer);thinking.classList.remove('show')}
+  function makeStore(){return WebChat.createStore({},({dispatch})=>next=>action=>{
+    if(action.type==='DIRECT_LINE/CONNECT_FULFILLED')dispatch({type:'DIRECT_LINE/POST_ACTIVITY',meta:{method:'keyboard'},payload:{activity:{type:'event',name:'startConversation',channelData:{postBack:true}}}});
+    if(action.type==='WEB_CHAT/SEND_MESSAGE'||action.type==='WEB_CHAT/SEND_POST_BACK'){suggestions.classList.add('hidden');showThinking()}
+    if(action.type==='DIRECT_LINE/INCOMING_ACTIVITY'&&action.payload?.activity?.from?.role==='bot'&&action.payload.activity.type==='message')hideThinking();
+    return next(action)
+  })}
+  async function connect(){
+    state.classList.remove('hidden');stateTitle.textContent='Connecting…';stateText.textContent='Starting a secure conversation with Ask Campbelltown.';
+    try{
+      const r=await fetch(TOKEN_ENDPOINT,{cache:'no-store'});const d=await r.json();
+      if(!r.ok||!d.token)throw new Error(d.error||'Token service failed.');
+      directLine=WebChat.createDirectLine({token:d.token});store=makeStore();webchat.innerHTML='';
+      WebChat.renderWebChat({directLine,store,styleOptions,locale:'en-AU'},webchat);state.classList.add('hidden');connected=true;
+    }catch(e){stateTitle.textContent="Couldn't connect";stateText.textContent=e.message}
+  }
+  async function restart(){hideThinking();suggestions.classList.remove('hidden');connected=false;try{directLine?.end?.()}catch(e){}await connect()}
+  suggestions.querySelectorAll('button').forEach(b=>b.onclick=()=>store&&store.dispatch({type:'WEB_CHAT/SEND_MESSAGE',payload:{text:b.textContent.trim()}}));
+  return {connect,restart,isConnected:()=>connected};
+}
+
+const widgetExp=createExperience('widget');
+const fullExp=createExperience('full');
+const widget=document.getElementById('widget');
+const launcher=document.getElementById('launcher');
+const fullPage=document.getElementById('fullPage');
+
+function openChat(){widget.classList.add('open');launcher.style.display='none';if(!widgetExp.isConnected())widgetExp.connect()}
+function closeChat(){widget.classList.remove('open');launcher.style.display='block'}
+function openFullPage(){closeChat();launcher.style.display='none';fullPage.classList.add('open');document.body.style.overflow='hidden';if(!fullExp.isConnected())fullExp.connect()}
+function closeFullPage(){fullPage.classList.remove('open');document.body.style.overflow='';launcher.style.display='block'}
+document.getElementById('widgetRestart').onclick=widgetExp.restart;
+document.getElementById('fullRestart').onclick=fullExp.restart;
 </script>
 </body>
 </html>
